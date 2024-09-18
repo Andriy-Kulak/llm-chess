@@ -7,7 +7,12 @@ import { Chessboard } from "react-chessboard";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
-const LLM_OPTIONS = ["gpt-4-turbo", "gpt-4o", "claude-3-5-sonnet"];
+const LLM_OPTIONS = [
+  "gpt-4-turbo",
+  "gpt-4o",
+  "claude-3-5-sonnet",
+  "llama-3.1-70b",
+];
 
 export default function ChessGame() {
   const [game, setGame] = useState(new Chess());

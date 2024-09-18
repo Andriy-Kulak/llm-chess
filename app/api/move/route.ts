@@ -4,6 +4,7 @@ import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { NextResponse } from "next/server";
 import { Chess } from "chess.js";
+import { createOpenAI } from "@ai-sdk/openai";
 
 export const MoveSchema = z.object({
   move: z.string(),
@@ -24,6 +25,13 @@ export async function POST(req: Request) {
       break;
     case "claude-3-5-sonnet":
       modelWithWrapper = anthropic("claude-3-5-sonnet-20240620");
+      break;
+    case "llama-3.1-70b":
+      const groq = createOpenAI({
+        baseURL: "https://api.groq.com/openai/v1",
+        apiKey: process.env.GROQ_API_KEY,
+      });
+      modelWithWrapper = groq("llama-3.1-70b-versatile");
       break;
     default:
       throw new Error("Invalid LLM selected");
