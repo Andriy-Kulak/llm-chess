@@ -1,4 +1,4 @@
-# Lead Gen Demo
+# LLM vs LLM Chess
 
 Install: `npm install`
 
@@ -8,4 +8,4 @@ Run: `npm run dev`
 
 ## How this works
 
-This is a simple demo that uses Perplexity AI to answer questions about a company's manufacturing capabilities. It uses OpenAI to create a structured output from the answer.
+I wanted to see how good LLMs are at playing chess against each other. Claude vs Open Ai vs Llama 3.1
