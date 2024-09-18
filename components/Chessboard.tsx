@@ -112,14 +112,16 @@ export default function ChessGame() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen relative">
+    <div className="flex flex-col justify-between items-center gap-4 py-4">
       {!isAIGame && (
-        <div className="mb-4">
-          <label className="mr-2 text-black font-semibold">White LLM:</label>
+        <div className="text-center">
+          <label className="block text-xl font-bold text-purple-600 mb-1">
+            Choose White's Champion:
+          </label>
           <select
             value={whiteLLM}
             onChange={(e) => setWhiteLLM(e.target.value)}
-            className="border rounded p-1 text-black bg-white"
+            className="border-2 border-purple-400 rounded-full p-1 text-lg text-black bg-white font-semibold"
           >
             {LLM_OPTIONS.map((option) => (
               <option key={option} value={option}>
@@ -131,22 +133,30 @@ export default function ChessGame() {
       )}
 
       {isAIGame && (
-        <div className="mb-4 text-black font-semibold">White: {whiteLLM}</div>
+        <div className="text-2xl font-bold text-blue-600 animate-pulse">
+          ⚔️ {whiteLLM} ⚔️
+        </div>
       )}
 
-      <Chessboard position={game.fen()} arePiecesDraggable={false} />
+      <div className="w-[80vw] max-w-[400px]">
+        <Chessboard position={game.fen()} arePiecesDraggable={false} />
+      </div>
 
       {isAIGame && (
-        <div className="mt-4 text-black font-semibold">Black: {blackLLM}</div>
+        <div className="text-2xl font-bold text-red-600 animate-pulse">
+          ⚔️ {blackLLM} ⚔️
+        </div>
       )}
 
       {!isAIGame && (
-        <div className="mt-4">
-          <label className="mr-2 text-black font-semibold">Black LLM:</label>
+        <div className="text-center">
+          <label className="block text-xl font-bold text-purple-600 mb-1">
+            Choose Black's Champion:
+          </label>
           <select
             value={blackLLM}
             onChange={(e) => setBlackLLM(e.target.value)}
-            className="border rounded p-1 text-black bg-white"
+            className="border-2 border-purple-400 rounded-full p-1 text-lg text-black bg-white font-semibold"
           >
             {LLM_OPTIONS.map((option) => (
               <option key={option} value={option}>
@@ -159,40 +169,47 @@ export default function ChessGame() {
 
       {!isAIGame && !gameOver && (
         <button
-          className="mt-4 px-4 py-2 bg-green-500 text-white rounded font-semibold"
+          className="px-6 py-3 bg-purple-600 text-white rounded-full font-bold text-xl hover:bg-purple-700 transition-colors duration-300 animate-pulse"
           onClick={startAIGame}
         >
-          Start AI vs AI Game
+          Unleash the AI Battle!
         </button>
       )}
 
       {isAIGame && !gameOver && (
-        <p className="mt-4 text-black font-semibold">
-          AI is playing... {game.turn() === "w" ? whiteLLM : blackLLM}'s turn
+        <p className="text-lg font-bold text-green-600 animate-bounce">
+          Epic showdown in progress...{" "}
+          {game.turn() === "w" ? whiteLLM : blackLLM} is plotting its next move!
         </p>
       )}
 
       {gameOver && (
         <>
-          <Confetti width={width} height={height} />
+          <Confetti
+            width={width}
+            height={height}
+            style={{ position: "fixed", top: 0, left: 0, zIndex: 1000 }}
+          />
 
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-8 text-center">
-              <h2 className="text-3xl font-bold mb-4 text-black">
-                {winner === "Draw" ? "Game Drawn" : `${winner} Won!`}
+              <h2 className="text-4xl font-extrabold mb-4 text-purple-600">
+                {winner === "Draw" ? "Epic Stalemate!" : `${winner} Triumphs!`}
               </h2>
               {winner !== "Draw" && (
-                <p className="text-lg text-gray-700 mb-4">
-                  {winner} won by{" "}
-                  {gameEndReason === "checkmate" ? "checkmate" : "invalid move"}
+                <p className="text-2xl text-gray-700 mb-4">
+                  {winner} clinched victory by{" "}
+                  {gameEndReason === "checkmate"
+                    ? "an earth-shattering checkmate"
+                    : "outsmarting its opponent"}
                   !
                 </p>
               )}
               <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-full font-bold text-lg hover:bg-blue-600 transition-colors duration-300"
                 onClick={resetGame}
               >
-                Reset Game
+                Prepare for Another Epic Battle!
               </button>
             </div>
           </div>
