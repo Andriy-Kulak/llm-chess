@@ -1,4 +1,3 @@
-import { DeepPartial } from "ai";
 import { z } from "zod";
 
 export const StructuredResponse = z.object({
