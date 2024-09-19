@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen bg-white text-center">
       <h1 className="text-3xl font-bold text-purple-600 pt-10">
-        LLM vs LLM Chess
+        LLM Chess Battle
       </h1>
       <div className="flex-grow">
         <ChessGame />

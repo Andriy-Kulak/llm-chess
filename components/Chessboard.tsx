@@ -12,6 +12,8 @@ const LLM_OPTIONS = [
   "gpt-4o",
   "claude-3-5-sonnet",
   "llama-3.1-70b",
+  "o1-preview",
+  "o1-mini",
 ];
 
 export default function ChessGame() {
@@ -25,6 +27,7 @@ export default function ChessGame() {
   const [gameEndReason, setGameEndReason] = useState<
     "checkmate" | "invalid_move" | "draw" | null
   >(null);
+  const [invalidMove, setInvalidMove] = useState<string | null>(null);
 
   useEffect(() => {
     if (isAIGame && !gameOver) {
@@ -52,7 +55,7 @@ export default function ChessGame() {
 
       if (!aiMove || aiMove === "null") {
         console.error("No valid moves returned by AI.");
-        handleGameOver(game, "invalid_move");
+        handleGameOver(game, "invalid_move", aiMove);
         return;
       }
 
@@ -61,7 +64,7 @@ export default function ChessGame() {
 
       if (move === null) {
         console.error("AI made an invalid move:", aiMove);
-        handleGameOver(game, "invalid_move");
+        handleGameOver(game, "invalid_move", aiMove);
         return;
       }
 
@@ -78,10 +81,17 @@ export default function ChessGame() {
 
   const handleGameOver = (
     gameInstance: Chess,
-    reason: "checkmate" | "invalid_move" | "draw" | null = null
+    reason: "checkmate" | "invalid_move" | "draw" | null = null,
+    invalidMoveAttempt: string | null = null
   ) => {
+    console.log("xxx invalid move params", {
+      gameInstance,
+      reason,
+      invalidMoveAttempt,
+    });
     setGameOver(true);
     setGameEndReason(reason);
+    setInvalidMove(invalidMoveAttempt);
 
     if (reason === "invalid_move") {
       setWinner(gameInstance.turn() === "w" ? "Black" : "White");
@@ -179,7 +189,7 @@ export default function ChessGame() {
       {isAIGame && !gameOver && (
         <p className="text-lg font-bold text-green-600 animate-bounce">
           Epic showdown in progress...{" "}
-          {game.turn() === "w" ? whiteLLM : blackLLM} is plotting its next move!
+          {game.turn() === "w" ? blackLLM : whiteLLM} is plotting its next move!
         </p>
       )}
 
@@ -191,7 +201,7 @@ export default function ChessGame() {
             style={{ position: "fixed", top: 0, left: 0, zIndex: 1000 }}
           />
 
-          <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="inset-0 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-8 text-center">
               <h2 className="text-4xl font-extrabold mb-4 text-purple-600">
                 {winner === "Draw" ? "Epic Stalemate!" : `${winner} Triumphs!`}
@@ -201,8 +211,16 @@ export default function ChessGame() {
                   {winner} clinched victory by{" "}
                   {gameEndReason === "checkmate"
                     ? "an earth-shattering checkmate"
+                    : gameEndReason === "invalid_move"
+                    ? `outsmarting its opponent with an invalid move attempt`
                     : "outsmarting its opponent"}
                   !
+                </p>
+              )}
+              {gameEndReason === "invalid_move" && invalidMove && (
+                <p className="text-xl text-red-600 mb-4">
+                  {winner === "White" ? "Black" : "White"} attempted an invalid
+                  move: "{invalidMove}"
                 </p>
               )}
               <button
