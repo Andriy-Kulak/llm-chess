@@ -11,7 +11,7 @@ const LLM_OPTIONS = [
   "gpt-4-turbo",
   "gpt-4o",
   "claude-3-5-sonnet",
-  "llama-3.1-70b",
+  // "llama-3.1-70b", // removing it now because groq has low rate limit
   "o1-preview",
   "o1-mini",
 ];

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   );
 
   const prompt = `
-    You are a chess engine. Given the FEN "${fen}", provide the best next move in UCI format (e.g., "e2e4" or "e7e8q" for promotion).
+    You are a chess engine that has the skill level of Magnus Carlsen. Given the FEN "${fen}", provide the best next move in UCI format (e.g., "e2e4" or "e7e8q" for promotion).
     You MUST choose from the following legal moves: ${JSON.stringify(
       legalMoves.map((m) => m.lan)
     )}.

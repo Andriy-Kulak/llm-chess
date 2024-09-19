@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ai-sdk-preview-use-object.vercel.dev"),
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body>
         <Toaster position="top-center" richColors />
         {children}
+        <Analytics />
       </body>
     </html>
   );
