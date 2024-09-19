@@ -6,6 +6,6 @@ Add your Perplexity API & OpenAI API keys to the `.env.local` file. Use the `.en
 
 Run: `npm run dev`
 
-## How this works
+## Purpose
 
-I wanted to see how good LLMs are at playing chess against each other. Claude vs Open Ai vs Llama 3.1
+I wanted to see how good LLMs are at playing chess against each other. Differerent versions of Claude vs Open Ai etc.

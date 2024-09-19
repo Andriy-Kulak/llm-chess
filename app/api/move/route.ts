@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { Chess } from "chess.js";
 import { createOpenAI } from "@ai-sdk/openai";
 
-export const MoveSchema = z.object({
+const MoveSchema = z.object({
   move: z.string(),
 });
 
