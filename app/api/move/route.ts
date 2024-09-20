@@ -1,13 +1,26 @@
-import { generateObject, generateText } from "ai";
-import { z } from "zod";
-import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
-import { NextResponse } from "next/server";
+import { createOpenAI, openai } from "@ai-sdk/openai";
+import {
+  experimental_customProvider as customProvider,
+  generateObject,
+  generateText,
+} from "ai";
 import { Chess } from "chess.js";
-import { createOpenAI } from "@ai-sdk/openai";
+import { NextResponse } from "next/server";
 
-const MoveSchema = z.object({
-  move: z.string(),
+const groq = createOpenAI({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY,
+});
+
+const provider = customProvider({
+  languageModels: {
+    "gpt-4-turbo": openai("gpt-4-turbo"),
+    "gpt-4o": openai("gpt-4o-2024-08-06", { structuredOutputs: true }),
+    "gpt-4o-mini": openai("gpt-4o-mini", { structuredOutputs: true }),
+    "claude-3-5-sonnet": anthropic("claude-3-5-sonnet-20240620"),
+    "llama-3.1-70b": groq("llama-3.1-70b-versatile"),
+  },
 });
 
 // Allow streaming responses up to 30 seconds
@@ -45,36 +58,18 @@ export async function POST(req: Request) {
     const { text } = await generateText({
       model: openai("o1-mini"),
       temperature: 1,
-      prompt: prompt,
+      prompt,
     });
     moveAttempt = text.trim();
   } else {
-    let modelWithWrapper;
-    switch (llm) {
-      case "gpt-4-turbo":
-      case "gpt-4o":
-        modelWithWrapper = openai(llm);
-        break;
-      case "claude-3-5-sonnet":
-        modelWithWrapper = anthropic("claude-3-5-sonnet-20240620");
-        break;
-      case "llama-3.1-70b":
-        const groq = createOpenAI({
-          baseURL: "https://api.groq.com/openai/v1",
-          apiKey: process.env.GROQ_API_KEY,
-        });
-        modelWithWrapper = groq("llama-3.1-70b-versatile");
-        break;
-      default:
-        throw new Error("Invalid LLM selected");
-    }
-
-    const { object } = await generateObject({
-      model: modelWithWrapper,
-      schema: MoveSchema,
-      prompt: prompt,
+    const { object: move } = await generateObject({
+      model: provider.languageModel(llm),
+      output: "enum",
+      enum: legalMoves.map((m) => m.lan),
+      prompt,
     });
-    moveAttempt = object.move;
+
+    moveAttempt = move;
   }
 
   console.log("xxx AI move attempt:", moveAttempt);

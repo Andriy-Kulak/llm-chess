@@ -10,6 +10,7 @@ import { useWindowSize } from "react-use";
 const LLM_OPTIONS = [
   "gpt-4-turbo",
   "gpt-4o",
+  "gpt-4o-mini",
   "claude-3-5-sonnet",
   // "llama-3.1-70b", // removing it now because groq has low rate limit
   "o1-preview",
